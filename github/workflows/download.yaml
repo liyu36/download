@@ -1,0 +1,24 @@
+name: image-build
+on:
+  push:
+    branches:
+      - 'master'
+    tags:
+      - '*'
+env:
+  USERNAME: ${{ secrets.ALIYUN_USERNAME }}
+  PASSWORD: ${{ secrets.ALIYUN_PASSWORD }}
+  SERVER: "registry.cn-hangzhou.aliyuncs.com"
+
+jobs:
+  image-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo.
+        uses: actions/checkout@v2
+
+      - name: Build and Push docker image.
+        run: |
+          echo "${PASSWORD}" | docker login -u ${USERNAME} --password-stdin ${SERVER}
+          bash download.sh ${SERVER}
